@@ -1,6 +1,7 @@
 @import "tailwindcss" source(none);
 @import "./theme.css";
 @source "./**/*.{ts,tsx}";
+@source "../dist/**/*.js";
 
 /* Opt-in page defaults; importing the library does not restyle an existing UI. */
 @layer base {
