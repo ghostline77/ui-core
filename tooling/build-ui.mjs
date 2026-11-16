@@ -2,12 +2,12 @@ import { build, createServer } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { createReadStream, statSync } from "node:fs";
+import { createReadStream, readFileSync, statSync } from "node:fs";
 
 export async function buildApp(directory, dev = false) {
   const root = resolve(directory);
   const catalogue = /[\\/](items|vehicles)[\\/]web$/.test(root);
-  const quest = /[\\/]quest-builder[\\/]ui$/.test(root);
+  const quest = JSON.parse(readFileSync(resolve(root, "package.json"), "utf8")).name === "@ghostline/quest-builder-ui";
   const ports = {
     "character-builder": 8787,
     "building-builder": 8792,
@@ -18,7 +18,7 @@ export async function buildApp(directory, dev = false) {
     vehicles: 8802,
     workspots: 8820,
   };
-  const project = root.split(/[\\/]/).at(-2);
+  const project = quest ? "quest-builder" : root.split(/[\\/]/).at(-2);
   const target =
     process.env.GHOSTLINE_UI_BACKEND ||
     `http://127.0.0.1:${ports[project] || 8787}`;

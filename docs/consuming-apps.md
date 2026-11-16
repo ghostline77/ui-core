@@ -1,6 +1,6 @@
 # Consuming applications
 
-The JavaScript workspace at `ghostline77` contains `ui-core` and its application frontends:
+The `ghostline77` GitHub organization contains `ui-core` and its application frontends:
 
 | Application | Source | Development UI | Default backend |
 |---|---|---|---|
@@ -13,14 +13,16 @@ The JavaScript workspace at `ghostline77` contains `ui-core` and its application
 | Vehicles catalogue | `vehicles/web/src` | 8902 | Published files |
 | Workspots | `workspots/ui/src` | Embedded UI | 8820 |
 
-Run from the `ghostline77` workspace root:
+Quest Builder installs ui-core from GitHub using its own `ui/package-lock.json`. From a standalone Quest Builder checkout:
 
-```powershell
+```sh
+cd ui
 npm ci
-npm run build:uis
-npm run check:uis
-npm run dev -w @ghostline/character-builder-ui
+npm run build
+npm run dev
 ```
+
+The Git dependency builds ui-core during installation; no sibling checkout is required. Other applications may still use the older local npm workspace until their manifests are migrated.
 
 All app shells use React/TypeScript and shared `AppShell`, `Button`, `Input` and
 `Select` components. Theme tokens, control styling, focus rings and dialog styling
@@ -47,9 +49,9 @@ provides a controller-facing bridge while React owns the canvas lifecycle.
 Native image APIs remain available for export thumbnails and layer-mask references.
 Other frontends retain their existing preview paths.
 
-The shared Cargo build hook builds missing/stale frontend bundles before Rust
-embeds them. Install workspace npm dependencies before invoking Cargo on a fresh
-checkout. Generated frontend output is in each app's `ui/dist` or `web/dist`.
+Quest Builder's Cargo build hook installs its locked npm dependencies and builds
+missing/stale frontend bundles before Rust embeds them. Node.js is required to
+build the CLI. Library consumers can disable the default `build-ui` feature. Generated frontend output is in each app's `ui/dist` or `web/dist`.
 Release executables embed built JavaScript/CSS and do not require Node or Vite
 at runtime. Development servers proxy API requests to the existing backend;
 override `GHOSTLINE_UI_BACKEND` or `GHOSTLINE_UI_PORT` for other local ports.

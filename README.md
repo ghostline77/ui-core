@@ -22,11 +22,15 @@ or Rust service. `npm run build` creates the reusable library in `dist`;
 `npm run build:demo` creates a separate static showcase in `demo-dist`.
 The authored `/examples/triangle.gltf` is a small loader check, not a game asset.
 
-## Consume from a sibling UI
+## Consume from GitHub
 
-Add `"@ghostline/ui-core": "file:../ui-core"` (adjust the relative path) and
-install React / React DOM 19. Install Three.js only when using the viewport.
-Build ui-core before installing the local dependency.
+Install the package from the `ghostline77` GitHub organization and React / React DOM 19:
+
+```sh
+npm install @ghostline/ui-core@github:ghostline77/ui-core react@19 react-dom@19
+```
+
+The Git dependency builds its library during installation. Commit your lockfile to pin the revision. Install Three.js when using the viewport.
 
 ```tsx
 import "@ghostline/ui-core/styles.css";
