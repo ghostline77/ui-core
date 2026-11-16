@@ -1,13 +1,16 @@
 import { build, createServer } from "vite";
 import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createReadStream, readFileSync, statSync } from "node:fs";
 
 export async function buildApp(directory, dev = false) {
   const root = resolve(directory);
-  const catalogue = /[\\/](items|vehicles)[\\/]web$/.test(root);
-  const quest = JSON.parse(readFileSync(resolve(root, "package.json"), "utf8")).name === "@ghostline/quest-builder-ui";
+  const { name } = JSON.parse(readFileSync(resolve(root, "package.json"), "utf8"));
+  const project = name.replace(/^@ghostline\//, "").replace(/-ui$/, "");
+  const catalogue = project === "items" || project === "vehicles";
+  const quest = project === "quest-builder";
   const ports = {
     "character-builder": 8787,
     "building-builder": 8792,
@@ -91,6 +94,7 @@ export async function buildApp(directory, dev = false) {
     base: catalogue ? "./" : "/",
     plugins: [
       react(),
+      tailwindcss(),
       localOrigin,
       ...(catalogue
         ? [

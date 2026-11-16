@@ -13,39 +13,20 @@ The `ghostline77` GitHub organization contains `ui-core` and its application fro
 | Vehicles catalogue | `vehicles/web/src` | 8902 | Published files |
 | Workspots | `workspots/ui/src` | Embedded UI | 8820 |
 
-Quest Builder installs ui-core from GitHub using its own `ui/package-lock.json`. From a standalone Quest Builder checkout:
+Install and run each frontend from its own UI directory. Cargo builds install the locked dependencies when the frontend is required.
 
 ```sh
-cd ui
-npm ci
+npm ci --workspaces=false
 npm run build
-npm run dev
 ```
 
-The Git dependency builds ui-core during installation; no sibling checkout is required. Other applications may still use the older local npm workspace until their manifests are migrated.
+The shared build tooling identifies applications by package name. Applications import the shared styles and TypeScript configuration through package exports.
 
-All app shells use React/TypeScript and shared `AppShell`, `Button`, `Input` and
-`Select` components. Theme tokens, control styling, focus rings and dialog styling
-come from ui-core. Tool-local styles retain their layouts, domain visualisations
-and specialised editors. Import ordering puts local styles in the `app-layout`
-cascade layer, then the shared component styles and domain-control styles.
-
-`mountApp` renders the shell synchronously before importing the existing domain
-controller. Character and item controllers expose `startController` so their
-asynchronous bootstrap runs after the bundle has initialised. Controllers retain
-their backend calls and project/data rules, and
-own only their designated list/editor leaves. Do not add React-rendered descendants
-inside a controller-owned leaf, or rerender its ancestor with new children.
-Development hot reload is disabled for these one-shot controller roots; reload
-explicitly after source edits. This avoids replacing an active editor DOM while
-retaining stale controller references. The standalone ui-core showcase remains
-a normal React development application.
-
-Character, building and item builders mount the shared interactive `Viewport`.
+Character and building builders render the shared interactive `Viewport` directly.
 Rust prepares a self-contained GLB from the native assembly when its appearance,
 shape, placement or visibility changes. Orbit, pan, zoom and view buttons update
-the browser camera without calling a preview/render endpoint. `mountViewport`
-provides a controller-facing bridge while React owns the canvas lifecycle.
+the browser camera without calling a preview/render endpoint. Item builder uses
+the `mountViewport` bridge while React owns the canvas lifecycle.
 Native image APIs remain available for export thumbnails and layer-mask references.
 Other frontends retain their existing preview paths.
 
@@ -78,8 +59,8 @@ rendered media. Normal catalogue generation also publishes the new bundles.
 
 `gl-app-shell`, `gl-app-header`, `gl-project-context` and `gl-project-actions`
 isolate shared shell geometry from tool-local `header` and `nav` selectors.
-Palette aliases and control states belong in `controller.css`; specialised editor
-layouts belong in each app's `src/style.css`. Preserve visible keyboard focus,
+The migrated apps use shared theme tokens and Tailwind utilities; `controller.css`
+supports the remaining controller apps. Preserve visible keyboard focus,
 selected states, wrapped action rows and access to every inspector panel.
 
 Editors use their full desktop columns when there is room. At intermediate widths,
@@ -96,3 +77,15 @@ offline catalogues need no additional font route or external font service.
 For visual checks, review every app at 320, 390, 768 and 1280 pixels wide, including
 the panels below the initial viewport, open menus and keyboard focus. Check layout
 and media loading after embedding the production bundles as well as in Vite.
+
+Run `npm run test:apps -w @ghostline/ui-core` after building the migrated apps.
+It checks Items and Vehicles from hosted subpaths and `file://`, plus character
+selection/save/jobs and building draft recovery, validation, history, placement
+and export against isolated API fixtures. Quest builder has its own unit and
+browser checks: `npm test -w @ghostline/quest-builder-ui` and
+`npm run test:browser -w @ghostline/quest-builder-ui`. These browser fixtures do
+not certify native material fidelity or in-game behaviour.
+
+Set `GHOSTLINE_TEST_CHARACTER_GLB` and `GHOSTLINE_TEST_BUILDING_GLB` to existing
+native preview files to exercise their geometry and materials in these browser
+checks. Without them, the checks use a small GLB loader fixture.

@@ -13,7 +13,9 @@
     "src/controller.css",
     "src/assets/fonts",
     "README.md",
-    "tooling/build-ui.mjs"
+    "tooling/build-ui.mjs",
+    "tsconfig.json",
+    "src/styles.css"
   ],
   "exports": {
     ".": {
@@ -27,7 +29,9 @@
     "./styles.css": "./dist/styles.css",
     "./theme.css": "./src/theme.css",
     "./controller.css": "./src/controller.css",
-    "./tooling/build-ui": "./tooling/build-ui.mjs"
+    "./tooling/build-ui": "./tooling/build-ui.mjs",
+    "./tsconfig.json": "./tsconfig.json",
+    "./tailwind.css": "./src/styles.css"
   },
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 8796 --strictPort",
@@ -37,6 +41,7 @@
     "test": "tsx --test src/viewport/camera.test.ts src/viewport/nativeMaterials.test.ts src/viewport/playback.test.ts",
     "format": "prettier --write src demo *.json *.ts *.html README.md",
     "check": "npm run typecheck && npm test && npm run build && npm run build:demo",
+    "test:apps": "node tooling/test-migrated-apps.mjs",
     "prepare": "npm run build"
   },
   "peerDependencies": {
@@ -53,22 +58,23 @@
     "clsx": "^2.1.1",
     "tailwind-merge": "^3.0.0",
     "vite": "^6.4.5",
-    "@vitejs/plugin-react": "^4.7.0"
+    "@vitejs/plugin-react": "^4.7.0",
+    "@tailwindcss/vite": "^4.3.4",
+    "tailwindcss": "^4.3.4"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.4",
-    "@tailwindcss/vite": "^4.3.4",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@types/three": "^0.187.0",
     "@types/node": "^22.0.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "tailwindcss": "^4.3.4",
     "three": "^0.187.0",
     "typescript": "^5.9.0",
     "tsx": "^4.21.0",
-    "prettier": "^3.0.0"
+    "prettier": "^3.0.0",
+    "@playwright/test": "^1.58.0"
   },
   "engines": {
     "node": ">=20.0.0"
