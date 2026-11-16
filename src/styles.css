@@ -1,0 +1,87 @@
+@import "tailwindcss" source(none);
+@import "./theme.css";
+@source "./**/*.{ts,tsx}";
+
+/* Opt-in page defaults; importing the library does not restyle an existing UI. */
+@layer base {
+  .gl-root {
+    color-scheme: dark;
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    min-height: 100dvh;
+  }
+  .gl-root :where(button, input, select, textarea) {
+    font: inherit;
+  }
+  .gl-root :where(button, input, select, textarea, summary, a):focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+  .gl-root button:not(:disabled),
+  .gl-root summary {
+    cursor: pointer;
+  }
+  .gl-root ::selection {
+    background: #c6ee8340;
+  }
+}
+
+@layer components {
+  .gl-workspace {
+    display: grid;
+    grid-template-columns: minmax(240px, 300px) minmax(0, 1fr) minmax(
+        240px,
+        280px
+      );
+    flex: 1;
+    min-height: 0;
+  }
+  .gl-workspace[data-inspector="false"] {
+    grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+  }
+  .gl-stage {
+    background: radial-gradient(
+      ellipse at 50% 48%,
+      #2d352c,
+      #1e251f 45%,
+      #151a16 80%
+    );
+  }
+  .gl-range {
+    accent-color: var(--color-accent);
+    width: 100%;
+  }
+  .gl-dialog {
+    color: var(--color-foreground);
+    background: var(--color-panel);
+    border: 1px solid var(--color-line);
+    border-radius: 12px;
+    padding: 24px;
+    width: min(480px, calc(100vw - 32px));
+  }
+  .gl-dialog::backdrop {
+    background: #060b08bb;
+    backdrop-filter: blur(6px);
+  }
+  @media (max-width: 1050px) {
+    .gl-workspace {
+      grid-template-columns: 230px minmax(0, 1fr);
+    }
+    .gl-workspace > .gl-inspector {
+      grid-column: 1 / -1;
+      border-top: 1px solid var(--color-line);
+    }
+  }
+  @media (max-width: 640px) {
+    .gl-workspace {
+      display: flex;
+      flex-direction: column;
+    }
+    .gl-workspace > .gl-stage {
+      min-height: 55dvh;
+      order: -1;
+    }
+  }
+}

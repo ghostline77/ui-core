@@ -1,0 +1,17 @@
+@theme static {
+  --color-background: #111313;
+  --color-panel: #191c1b;
+  --color-surface: #202620;
+  --color-input: #121613;
+  --color-line: #343a36;
+  --color-foreground: #e9ede7;
+  --color-muted: #929c95;
+  --color-map-road: #657169;
+  --color-accent: #c6ee83;
+  --color-accent-hover: #d8ffa1;
+  --color-accent-ink: #17200e;
+  --color-danger: #f5a797;
+  --color-warning: #eacb88;
+  --font-sans: Inter, "Segoe UI", sans-serif;
+  --radius-control: 6px;
+}

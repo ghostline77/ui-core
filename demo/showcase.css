@@ -1,0 +1,17 @@
+@import "tailwindcss" source(none);
+@source "./**/*.{ts,tsx}";
+body {
+  margin: 0;
+}
+.gl-root {
+  height: 100dvh;
+}
+.demo-tile {
+  display: grid;
+  place-items: center;
+  height: 90px;
+  background: radial-gradient(#4b5947, #283429);
+  color: #c6ee83;
+  font-size: 48px;
+  border-radius: 3px;
+}
