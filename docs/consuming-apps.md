@@ -42,13 +42,13 @@ same-origin requests to the backend's origin. Backend session tokens remain inta
 Items and vehicles build a single classic-script bundle with relative URLs.
 Their generated data scripts load first, preserving offline `file://` browsing
 and deployment under a hosted subpath. Development reads data/media from the
-existing sibling `dist/catalogue` without copying or regenerating it.
+catalogue repository’s own `dist/catalogue` without copying or regenerating it.
 
 To update only the UI in an existing published catalogue:
 
 ```powershell
-items/target/release/ghostline-items.exe refresh-ui --catalogue items/dist/catalogue
-vehicles/target/release/ghostline-vehicles.exe refresh-ui --catalogue vehicles/dist/catalogue
+ghostline-items refresh-ui --catalogue PATH_TO_ITEMS_CATALOGUE
+ghostline-vehicles refresh-ui --catalogue PATH_TO_VEHICLES_CATALOGUE
 ```
 
 These commands replace the three browser assets and update their manifest
