@@ -21,7 +21,6 @@ export async function buildApp(directory, dev = false) {
     vehicles: 8802,
     workspots: 8820,
   };
-  const project = quest ? "quest-builder" : root.split(/[\\/]/).at(-2);
   const target =
     process.env.GHOSTLINE_UI_BACKEND ||
     `http://127.0.0.1:${ports[project] || 8787}`;
