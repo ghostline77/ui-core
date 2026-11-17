@@ -10,9 +10,43 @@ import {
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, extname, resolve, sep } from "node:path";
-import { pathToFileURL, fileURLToPath } from "node:url";
+import { pathToFileURL } from "node:url";
+import { execFileSync } from "node:child_process";
 import { chromium, expect } from "@playwright/test";
-const workspace = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
+// Callers can provide individual built bundles, including downloaded artifacts.
+async function bundleDirectory(app) {
+  const [repository, frontend] = app.split("/");
+  const variable =
+    "GHOSTLINE_TEST_" + repository.replaceAll("-", "_").toUpperCase() + "_DIST";
+  if (process.env[variable]) return resolve(process.env[variable]);
+  const checkout = resolve(temporary, repository);
+  execFileSync(
+    "git",
+    [
+      "clone",
+      "--depth=1",
+      "https://github.com/ghostline77/" + repository + ".git",
+      checkout,
+    ],
+    { stdio: "inherit" },
+  );
+  const cwd = resolve(checkout, frontend);
+  for (const args of [["ci"], ["run", "build"]]) {
+    if (process.platform === "win32") {
+      execFileSync(
+        "cmd.exe",
+        ["/d", "/c", "npm", "--workspaces=false", ...args],
+        { cwd, stdio: "inherit" },
+      );
+    } else {
+      execFileSync("npm", ["--workspaces=false", ...args], {
+        cwd,
+        stdio: "inherit",
+      });
+    }
+  }
+  return resolve(cwd, "dist");
+}
 const temporary = await mkdtemp(resolve(tmpdir(), "ghostline-react-"));
 const browser = await chromium.launch({
   headless: true,
@@ -39,7 +73,7 @@ async function put(root, path, value) {
 async function packageApp(app) {
   const root = resolve(temporary, app.replaceAll("/", "-"));
   await mkdir(root, { recursive: true });
-  const dist = resolve(workspace, app, "dist");
+  const dist = await bundleDirectory(app);
   for (const name of app.endsWith("/web")
     ? ["index.html", "assets/app.js", "assets/style.css"]
     : ["index.html", "app.js", "style.css"]) {

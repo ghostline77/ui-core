@@ -78,12 +78,12 @@ For visual checks, review every app at 320, 390, 768 and 1280 pixels wide, inclu
 the panels below the initial viewport, open menus and keyboard focus. Check layout
 and media loading after embedding the production bundles as well as in Vite.
 
-Run `npm run test:apps -w @ghostline/ui-core` after building the migrated apps.
+From UI Core, run `npx playwright install chromium` and `npm run test:apps`. The test fetches and builds each required application in a temporary directory. To reuse built bundles, set `GHOSTLINE_TEST_ITEMS_DIST`, `GHOSTLINE_TEST_VEHICLES_DIST`, `GHOSTLINE_TEST_CHARACTER_BUILDER_DIST` or `GHOSTLINE_TEST_BUILDING_BUILDER_DIST` to the appropriate output directory.
 It checks Items and Vehicles from hosted subpaths and `file://`, plus character
 selection/save/jobs and building draft recovery, validation, history, placement
 and export against isolated API fixtures. Quest builder has its own unit and
-browser checks: `npm test -w @ghostline/quest-builder-ui` and
-`npm run test:browser -w @ghostline/quest-builder-ui`. These browser fixtures do
+browser checks: `npm test` and
+`npm run test:browser` from Quest Builder’s `ui/` directory. These browser fixtures do
 not certify native material fidelity or in-game behaviour.
 
 Set `GHOSTLINE_TEST_CHARACTER_GLB` and `GHOSTLINE_TEST_BUILDING_GLB` to existing
